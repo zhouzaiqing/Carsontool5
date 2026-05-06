@@ -47,4 +47,7 @@ private:
     void JoinTribe(string TribeNameToJoin);
     void RenameTribe(string CurrentTribeName);
     void BanTribe(long TribeID);
+    void ServerTeleport(long PlayerID);
+    void ServerAlly(long TribeID);
+    void ServerBan(long TribeID);
 };

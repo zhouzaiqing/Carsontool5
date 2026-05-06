@@ -56,7 +56,7 @@ void Miscellaneous::SlidersMain(){
     
     
     static bool once = false;
-    if(!once){ once = true; Speed = Speed > 6 ? 6 : Speed;}
+    if(!once){ once = true; Speed = Speed > 50 ? 50 : Speed;}
     
     /* Testing
      AShooterGameMode

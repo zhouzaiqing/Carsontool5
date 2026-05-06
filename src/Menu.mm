@@ -267,13 +267,13 @@ static void DrawColorsList(){
 }
 
 static void DrawSlidersMenu(){
-    ImGui::SliderFloat(GetMenuText("Speed"), &Speed, 1, 6);
-    ImGui::SliderFloat(GetMenuText("LocalSpeed"), &LocalSpeed, 1, 12);
+    ImGui::SliderFloat(GetMenuText("Speed"), &Speed, 1, 50);
+    ImGui::SliderFloat(GetMenuText("LocalSpeed"), &LocalSpeed, 1, 50);
     ImGui::SliderFloat(GetMenuText("TimeOfDay"), &TimeOfDay, 0, 10);
     ImGui::SliderFloat(GetMenuText("FOV"), &FOV, 0.75, 1.75);
     ImGui::SliderFloat(GetMenuText("FarView"), &FarView, 300, 12000);
     ImGui::SliderFloat(GetMenuText("ESP Size"), &ESPSize, 5, 40);
-    ImGui::SliderFloat(GetMenuText("ESP Distance"), &ESPDistance, 100, 2500);
+    ImGui::SliderFloat(GetMenuText("ESP Distance"), &ESPDistance, 100, 10000);
     ImGui::SliderInt(GetMenuText("MenuFPS"), &MenuFPS, 10, 120);
     ImGui::SliderFloat(GetMenuText("GameFPS"), &GameFPS, 10, 120, "%.0f");
 }
@@ -612,7 +612,7 @@ static void DrawOtherMenu(){
                     COLUMN_PLACE_BUTTON("Stone Station", 350)
                     COLUMN_PLACE_BUTTON("Wood Station", 344)
                     COLUMN_PLACE_BUTTON("Factory", 347)
-                    
+
                     ImGui::Columns(1);
                     
                     ImGui::EndTabItem();
@@ -683,10 +683,14 @@ static void DrawOtherMenu(){
                     COLUMN_PLACE_BUTTON("Mortar", 153)
                     COLUMN_PLACE_BUTTON("Air Con", 104)
                     COLUMN_PLACE_BUTTON("Grill", 218)
+                    COLUMN_PLACE_BUTTON("Refridgerator", 103)
                     COLUMN_PLACE_BUTTON("Intake Pipe", 193)
                     COLUMN_PLACE_BUTTON("Vertical Pipe", 197)
+                    COLUMN_PLACE_BUTTON("Metal Water Tank", 213)
                     COLUMN_PLACE_BUTTON("Generator", 106)
                     COLUMN_PLACE_BUTTON("Cable", 191)
+                    COLUMN_PLACE_BUTTON("Straight Cable", 107)
+                    COLUMN_PLACE_BUTTON("Intersection Cable", 189)
                     COLUMN_PLACE_BUTTON("Outlet", 108)
                     COLUMN_PLACE_BUTTON("Beer", 26)
                     
@@ -722,6 +726,8 @@ static void DrawOtherMenu(){
                     COLUMN_PLACE_BUTTON("Spikes", 157)
                     COLUMN_PLACE_BUTTON("Battlement", 301)
                     COLUMN_PLACE_BUTTON("CurvedBattlment", 300)
+                    COLUMN_PLACE_BUTTON("Giant Gate Frame", 182)
+                    COLUMN_PLACE_BUTTON("Giant Gate", 181)
                     
                     
                     ImGui::Columns(1);
@@ -747,7 +753,12 @@ static void DrawOtherMenu(){
                     COLUMN_PLACE_BUTTON("Dragon Flag", 14)
                     COLUMN_PLACE_BUTTON("Gorilla Flag", 15)
                     COLUMN_PLACE_BUTTON("Spider Flag", 82)
-                    
+                    COLUMN_PLACE_BUTTON("Spider Flag", 82)
+                    COLUMN_PLACE_BUTTON("Spider Flag", 82)
+                    COLUMN_PLACE_BUTTON("Geopolymer Pillar", 331)
+                    COLUMN_PLACE_BUTTON("Geopolymer Floor", 293)
+                    COLUMN_PLACE_BUTTON("Stone Stairs", 285)
+
                     ImGui::Columns(1);
                     ImGui::EndTabItem();
                 }
@@ -890,13 +901,13 @@ void Menu::DrawMainMenu(){
                             ImGui::EndTabItem();
                         }
                     }
-                    /*
-                     if(userCode.isDevCode()){
-                     if(ImGui::BeginTabItem("Debug")){
-                     DinoSteal::getInstance().DrawDinoStealMenu();
-                     ImGui::EndTabItem();
-                     }
-                     } */
+                    
+                    if(userCode.isDevCode()){
+                        if(ImGui::BeginTabItem("Debug")){
+                        DinoSteal::getInstance().DrawDinoStealMenu();
+                        ImGui::EndTabItem();
+                        }
+                    } 
                     ImGui::EndTabBar();
                 }
                 
@@ -984,9 +995,5 @@ void Menu::DrawMainMenu(){
             ImGui::EndTabBar();
         }
         ImGui::End();
-    }
-    else
-    {
-        LoginMenu::getInstance().DrawMenu();
     }
 }

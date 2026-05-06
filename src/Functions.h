@@ -71,7 +71,8 @@ public:
     void PickupEnemyBase();
     void DestroyEnemyBase();
     void ForeverCrash();
-    //void ServerTeleportToPlayerLocation(int64_t ForLinkedPlayerID);
-    //void ServerBanTribe(uint64 TribeTeamID, int NumDays, struct FString BanReason, bool bDestroyStructures, bool bDestroyDinos);
-    //void ServerTribeRequestNewAlliance(uint32_t TribeID);
+
+    void ServerTeleportToPlayerLocation(int64_t ForLinkedPlayerID);
+    void ServerBanTribe(uint64_t TribeTeamID, int NumDays, FString BanReason, bool bDestroyStructures, bool bDestroyDinos);
+    void ServerTribeRequestNewAlliance(uint32_t TribeID);
 };

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(lipo -info .theos/obj/debug/Carsontool5.dylib)",
+      "Bash(codesign -dv .theos/obj/debug/Carsontool5.dylib)",
+      "Bash(lipo -info /Users/zachary/git/Carsontool5/.theos/obj/debug/Carsontool5.dylib)",
+      "Bash(chmod +x /Users/zachary/git/Carsontool5/build.sh)",
+      "Bash(./build.sh clean *)",
+      "Bash(./build.sh)"
+    ]
+  }
+}

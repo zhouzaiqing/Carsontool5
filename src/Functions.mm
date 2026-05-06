@@ -669,6 +669,44 @@ void FunctionCall::TribeRequestNewAlliance(int TribeID){
     funcqueue.AddFunction(std::bind(&InternalTribeRequestNewAlliance, TribeID));
 }
 
+static void InternalServerTeleportToPlayerLocation(int64_t ForLinkedPlayerID){
+    UObject* MyController = gameUtils.GetMyController();
+    if(utils.isValidAdress(MyController)){
+        int64_t PlayerIDForCall = ForLinkedPlayerID;
+        functions.ProcessEventCall(MyController, L"ServerTeleportToPlayerLocation", &PlayerIDForCall);
+    }
+}
+static void InternalServerBanTribe(uint64_t TribeTeamID, int NumDays, FString BanReason, bool bDestroyStructures, bool bDestroyDinos){
+    UObject* MyController = gameUtils.GetMyController();
+    if(utils.isValidAdress(MyController)){
+        ServerBanTribe_Params BanParamaters;
+        BanParamaters.TribeTeamID = TribeTeamID;
+        BanParamaters.NumDays = NumDays;
+        BanParamaters.BanReason = BanReason;
+        BanParamaters.bDestroyStructures = bDestroyStructures;
+        BanParamaters.bDestroyDinos = bDestroyDinos;
+
+        functions.ProcessEventCall(MyController, L"ServerBanTribe", &BanParamaters);
+    }
+}
+static void InternalServerTribeRequestNewAlliance(uint32_t TribeID){
+    UObject* PlayerState = gameUtils.GetPlayerState();
+    if(utils.isValidAdress(PlayerState)){
+        uint32_t TribeIDForCall = TribeID;
+        functions.ProcessEventCall(PlayerState, L"ServerTribeRequestNewAlliance", &TribeIDForCall);
+    }
+}
+
+void FunctionCall::ServerTeleportToPlayerLocation(int64_t ForLinkedPlayerID){
+    funcqueue.AddFunction(std::bind(&InternalServerTeleportToPlayerLocation, ForLinkedPlayerID));
+}
+void FunctionCall::ServerBanTribe(uint64_t TribeTeamID, int NumDays, FString BanReason, bool bDestroyStructures, bool bDestroyDinos){
+    funcqueue.AddFunction(std::bind(&InternalServerBanTribe, TribeTeamID, NumDays, BanReason, bDestroyStructures, bDestroyDinos));
+}
+void FunctionCall::ServerTribeRequestNewAlliance(uint32_t TribeID){
+    funcqueue.AddFunction(std::bind(&InternalServerTribeRequestNewAlliance, TribeID));
+}
+
 
 void FunctionCall::BedIDTP(){
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Bed Teleport"

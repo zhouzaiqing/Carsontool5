@@ -293,16 +293,83 @@ void ESP::FilterESP(){
     
     
     static bool RequestShit = true;
-    
+
+    // ----------------------------------------------------------------------
+    // VALIDATE FIRST, THEN CLEAR.
+    //
+    // Previously the ESP lists were cleared at the top of this function and
+    // then a series of validations would early-return on transient null /
+    // invalid game state (respawn, level transition, briefly null inventory,
+    // etc.). Combined with the 0.4s throttle, that meant a single bad tick
+    // wiped the lists and left ESP blank for at least 0.4s — sometimes much
+    // longer if successive ticks also hit a bad state.
+    //
+    // We now gather every required pointer up front and bail out *without*
+    // touching the live lists if anything is invalid. ESPMain's own isA() /
+    // isObject() checks filter out any actors that have since been freed,
+    // so reusing the previous frame's lists for one extra cycle is safe and
+    // makes ESP visibly stable across transient invalidations.
+    // ----------------------------------------------------------------------
+
+    if(!EnableESP){
+        DinoList.clear();
+        PlayerList.clear();
+        StructureList.clear();
+        ContainerList.clear();
+        BedList.clear();
+        TurretList.clear();
+        for(int i = 0; i<30; i++) playerArmorIcons[i].Reset();
+        for(int i = 0; i<100; i++){
+            BedIcons[i].frame = CGRectMake(-100, -100, 50, 50);
+            InvisibleBedIcons[i].frame = CGRectMake(-100, -100, 50, 50);
+        }
+        for(int i = 0; i<15; i++){
+            TransferIcons[i].frame = CGRectMake(-100, -100, 50, 50);
+            StealIcons[i].frame = CGRectMake(-100, -100, 50, 50);
+            InvisibleTransferIcons[i].frame = CGRectMake(-100, -100, 50, 50);
+            InvisibleStealIcons[i].frame = CGRectMake(-100, -100, 50, 50);
+        }
+        return;
+    }
+
+    if(gameUtils.GetMyShooterCharacter() == nullptr || gameUtils.GetMyController() == nullptr){
+        return;
+    }
+
+    UpdateAlliedTeamIDs();
+
+    int MyTeamID = gameUtils.GetMyTeam();
+    Vector3 MyLocation = gameUtils.GetRootLocation();
+    TArray<UObject*> TActorsArray = gameUtils.GetActorsArray();
+    long MyTribeData = gameUtils.GetMyTribeData();
+    float* ViewMatrix = gameUtils.GetViewMatrix();
+    UObject* MyInventory = gameUtils.GetMyInventory();
+    UObject* WorldSettings = gameUtils.GetWorldSettings();
+    UObject* MyCharacter = gameUtils.GetMyShooterCharacter();
+    UObject* Character = gameUtils.GetMyCharacter();
+
+    UObject* StructurePlacer = gameUtils.GetStructurePlacer();
+    UObject* CurrentPlacingStructure = utils.isValidAdress(StructurePlacer)
+                                          ? utils.Read<UObject*>(StructurePlacer + 0x658)
+                                          : nullptr;
+
+    if(!utils.isValidAdress(MyTribeData)) return;
+    if(!utils.isValidAdress(MyInventory)) return;
+    if(!TActorsArray.IsValidArray()) return;
+
+    TArray<UObject*> InventoryItems = utils.Read<TArray<UObject*>>(MyInventory + 0x228);
+    if(!InventoryItems.IsValidArray()) return;
+
+    // All preconditions OK — safe to throw away the previous frame's data.
     DinoList.clear();
     PlayerList.clear();
     StructureList.clear();
     ContainerList.clear();
     BedList.clear();
     TurretList.clear();
-    
+
     int BedCount = 0;
-    
+
     for(int i = 0; i<30; i++){
         playerArmorIcons[i].Reset();
     }
@@ -316,36 +383,10 @@ void ESP::FilterESP(){
         InvisibleTransferIcons[i].frame = CGRectMake(-100, -100, 50, 50);
         InvisibleStealIcons[i].frame = CGRectMake(-100, -100, 50, 50);
     }
-    
-    if(gameUtils.GetMyShooterCharacter() == nullptr || gameUtils.GetMyController() == nullptr || !EnableESP){
-        return;
-    }
-    
-    UpdateAlliedTeamIDs();
-    
-    int MyTeamID = gameUtils.GetMyTeam();
-    Vector3 MyLocation = gameUtils.GetRootLocation();
-    TArray<UObject*> TActorsArray = gameUtils.GetActorsArray();
-    long MyTribeData = gameUtils.GetMyTribeData();
-    float* ViewMatrix = gameUtils.GetViewMatrix();
-    UObject* MyInventory = gameUtils.GetMyInventory();
-    TArray<UObject*> InventoryItems = utils.Read<TArray<UObject*>>(MyInventory + 0x228);
-    UObject* WorldSettings = gameUtils.GetWorldSettings();
-    UObject* MyCharacter = gameUtils.GetMyShooterCharacter();
-    UObject* Character = gameUtils.GetMyCharacter();
-    
-    UObject* StructurePlacer = gameUtils.GetStructurePlacer();
-    UObject* CurrentPlacingStructure = utils.Read<UObject*>(StructurePlacer + 0x658);
-    
-    
-    
-    //float FlyerDamageBuffMaxSpeed; // Offset: 0xde4 // Size: 0x04
-    if(!utils.isValidAdress(MyTribeData)) return;
-    
+
     FItemNetID ElementNetID = 0, GasolineNetID = 0, AmmoNetID = 0;
-    
+
     //Search inventory for element, gas and bullets
-    if(!InventoryItems.IsValidArray()) return;
     for(int i = 0; i<InventoryItems.Count; ++i){
         //UObject* CurrentItem = InventoryItems[i];
         UObject* CurrentItem = InventoryItems[i];

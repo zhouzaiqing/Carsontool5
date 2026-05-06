@@ -937,7 +937,7 @@ void Testing::PrintProcessesTest()
         }
         else if([executableName containsString:@"Bundle/Application"]){
             menu.ConsoleLog(OwnerName, "Bundle/Applicate", Green);
-        
+        }
     }
 }
 

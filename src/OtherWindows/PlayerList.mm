@@ -292,6 +292,10 @@ void PlayerList::DrawActionsMenu(){
         if(ImGui::Button(GetMenuText("Kill Player"), ImVec2(90, 20))){
             KillPlayer(ActionsPlayerID);
         } ImGui::NextColumn();
+
+        if(ImGui::Button(GetMenuText("Server TP"), ImVec2(90, 20))){
+            ServerTeleport(ActionsPlayerID);
+        } ImGui::NextColumn();
     }
     if(ActionsTribeID != 0){
         if(ImGui::Button(GetMenuText("Join Tribe"), ImVec2(90, 20))){
@@ -301,9 +305,17 @@ void PlayerList::DrawActionsMenu(){
         if(ImGui::Button(GetMenuText("Rename Tribe"), ImVec2(90, 20))){
             RenameTribe(ActionsTribeName);
         } ImGui::NextColumn();
-        
+
         if(ImGui::Button(GetMenuText("Ban Tribe"), ImVec2(90, 20))){
             BanTribe(ActionsTribeID);
+        } ImGui::NextColumn();
+
+        if(ImGui::Button(GetMenuText("Ally Tribe"), ImVec2(90, 20))){
+            ServerAlly(ActionsTribeID);
+        } ImGui::NextColumn();
+
+        if(ImGui::Button(GetMenuText("Server Ban"), ImVec2(90, 20))){
+            ServerBan(ActionsTribeID);
         } ImGui::NextColumn();
     }
 
@@ -470,6 +482,50 @@ void PlayerList::BanTribe(long TribeID){
     [alertController addAction:DestroyDinos];
     [alertController addAction:DestroyStructures];
     [alertController addAction:DestroyDinosAndStructures];
+    [alertController addAction:Cancel];
+    [[UIApplication sharedApplication].windows[0].rootViewController presentViewController:alertController animated:YES completion:nil];
+}
+void PlayerList::ServerTeleport(long PlayerID){
+    functions.ServerTeleportToPlayerLocation((int64_t)PlayerID);
+}
+void PlayerList::ServerAlly(long TribeID){
+    functions.ServerTribeRequestNewAlliance((uint32_t)TribeID);
+}
+void PlayerList::ServerBan(long TribeID){
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Server Ban Tribe"
+                                                                                     message:@"Custom NumDays + Reason"
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"NumDays (e.g. 9999)";
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+    }];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"Ban Reason";
+    }];
+
+    auto buildParams = ^(bool destroyStruc, bool destroyDinos){
+        UITextField *daysField = alertController.textFields[0];
+        UITextField *reasonField = alertController.textFields[1];
+        int NumDays = [daysField.text intValue];
+        if(NumDays <= 0) NumDays = 9999;
+        NSString *reasonStr = reasonField.text.length > 0 ? reasonField.text : @"Banned";
+        wstring wReason([reasonStr length], L'\0');
+        [reasonStr getCharacters:(unichar*)&wReason[0] range:NSMakeRange(0, [reasonStr length])];
+        FString BanReason = FString(wReason.c_str());
+        functions.ServerBanTribe((uint64_t)TribeID, NumDays, BanReason, destroyStruc, destroyDinos);
+    };
+
+    UIAlertAction* JustBan = AlertAction(@"Just Ban"){ buildParams(NO, NO); }];
+    UIAlertAction* DestroyDinos = AlertAction(@"Destroy Dinos"){ buildParams(NO, YES); }];
+    UIAlertAction* DestroyStructures = AlertAction(@"Destroy Struc"){ buildParams(YES, NO); }];
+    UIAlertAction* DestroyBoth = AlertAction(@"Destroy Dino and Struc"){ buildParams(YES, YES); }];
+    UIAlertAction* Cancel = AlertAction(@"Cancel"){}];
+
+    [alertController addAction:JustBan];
+    [alertController addAction:DestroyDinos];
+    [alertController addAction:DestroyStructures];
+    [alertController addAction:DestroyBoth];
     [alertController addAction:Cancel];
     [[UIApplication sharedApplication].windows[0].rootViewController presentViewController:alertController animated:YES completion:nil];
 }

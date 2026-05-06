@@ -353,12 +353,12 @@ static void GetDestructionList(){
             Vector3 Location = utils.Read<Vector3>(SceneComponent + 0x290);
             
             
-            if(gameUtils.isA_Fast(CurrentActor, FunctionsStaticClassFunctions::PrimalDinoCharacter()) && ObjectTeamID > 1000){
+            if(gameUtils.isA_Fast(CurrentActor, FunctionsStaticClassFunctions::PrimalDinoCharacter())){
                 if(ClaimAllDinos && ObjectTeamID > 1000)
                     PVEUnclaimDino(CurrentActor);
                 else if(KillAllDinos)
                     PVEKillDinos(CurrentActor);
-                    
+
                 continue;
             }
             if(CheckStructures){

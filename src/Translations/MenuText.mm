@@ -761,6 +761,8 @@ static void SetLanguageChinese()
     LanguageMap["Vertical Pipe"] = (char*)"垂直水管";
     LanguageMap["Generator"] = (char*)"发电机";
     LanguageMap["Cable"] = (char*)"垂直电缆";
+    LanguageMap["Straight Cable"] = (char*)"水平电缆";
+    LanguageMap["Intersection Cable"] = (char*)"十字电缆";
     LanguageMap["Outlet"] = (char*)"插座";
     LanguageMap["Beer"] = (char*)"酒桶";
     LanguageMap["Hatchframe"] = (char*)"天窗框";
@@ -775,8 +777,13 @@ static void SetLanguageChinese()
     LanguageMap["Sloped Right"] = (char*)"金属右斜墙";
     LanguageMap["Billboard"] = (char*)"广告牌";
     LanguageMap["Fence Found"] = (char*)"金属栅栏地基";
-    LanguageMap["Gate Frame"] = (char*)"金属恐龙门";
-    LanguageMap["Gate"] = (char*)"金属恐龙门";
+    LanguageMap["Gate Frame"] = (char*)"铁恐龙门框";
+    LanguageMap["Gate"] = (char*)"铁恐龙门";
+    LanguageMap["Giant Gate Frame"] = (char*)"巨型恐龙门框";
+    LanguageMap["Giant Gate"] = (char*)"巨型恐龙门";
+    LanguageMap["Geopolymer Pillar"] = (char*)"聚合物水泥柱";
+    LanguageMap["Geopolymer Floor"] = (char*)"聚合物水泥地基";
+
     LanguageMap["Foundation"] = (char*)"金属地基";
     LanguageMap["Wall"] = (char*)"金属墙";
     LanguageMap["Ceiling"] = (char*)"金属天花板";
@@ -800,6 +807,7 @@ static void SetLanguageChinese()
     LanguageMap["Large Wall Mount"] = (char*)"大型武器挂壁";
     LanguageMap["Vase"] = (char*)"陶瓷瓶";
     LanguageMap["Armor Stand"] = (char*)"装备支架";
+    LanguageMap["Metal Water Tank"] = (char*)"金属蓄水罐";
     LanguageMap["Mailbox"] = (char*)"大邮箱";
     LanguageMap["Dragon Flag"] = (char*)"喷火龙旗帜";
     LanguageMap["Gorilla Flag"] = (char*)"大猩猩旗帜";
@@ -1019,6 +1027,10 @@ static void SetLanguageChinese()
     LanguageMap["Polymer"] = (char*)"聚合物板";
     LanguageMap["Biotoxin"] = (char*)"水母毒";
     LanguageMap["BlackPearl"] = (char*)"黑珍珠";
+    LanguageMap["Stone Stairs"] = (char*)"石头台阶";
+    LanguageMap["Refridgerator"] = (char*)"冰箱";
+
+    
 }
 
 static void SetLanguageJapenese()__attribute((__annotate__(("nostrenc"))));

@@ -710,12 +710,12 @@ static void Hook_PlaySpawnIntro(UObject* Character){
     if(utils.isValidAdress(WorldSettings)){
         utils.Write<float>(WorldSettings + 0x934, 30);
     }
-    Speed = 50;
-    
+    Speed = 1;
+
     timer(0.5){
         Speed = InitialSpeed;
     });
-    
+
     return PlaySpawnIntro(Character);
 }
 

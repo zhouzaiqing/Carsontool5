@@ -1,0 +1,9 @@
+Package: com.carson.carsontool5
+Name: Carsontool5
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: ImGui menu overlay tweak for ARK: Survival Evolved (mobile).
+Maintainer: carson
+Author: carson
+Section: Tweaks
+Depends: mobilesubstrate, firmware (>= 14.0)
